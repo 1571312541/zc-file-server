@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zc.file.admin.mapper.ZFileConfigMapper">
+  <resultMap id="BaseResultMap" type="com.zc.file.admin.model.ZFileConfig">
+    <!--@mbg.generated-->
+    <!--@Table z_storage_config-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="client_type" jdbcType="VARCHAR" property="clientType" />
+    <result column="client_name" jdbcType="VARCHAR" property="clientName" />
+    <result column="access_key" jdbcType="VARCHAR" property="accessKey" />
+    <result column="secret_key" jdbcType="VARCHAR" property="secretKey" />
+    <result column="endpoint" jdbcType="VARCHAR" property="endpoint" />
+    <result column="domain" jdbcType="VARCHAR" property="domain" />
+    <result column="bucket" jdbcType="VARCHAR" property="bucket" />
+    <result column="base_path" jdbcType="VARCHAR" property="basePath" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, storage_type, storage_name, access_key, secret_key, endpoint, `domain`, bucket,
+    base_path, `status`, create_time, update_time
+  </sql>
+
+</mapper>
