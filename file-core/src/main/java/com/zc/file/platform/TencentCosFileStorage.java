@@ -17,6 +17,7 @@ import lombok.Setter;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.function.Consumer;
 
 /**
@@ -67,7 +68,7 @@ public class TencentCosFileStorage implements FileStorage {
                 fileInfo.setThUrl(domain + newThFileKey);
                 cos.putObject(bucketName,newThFileKey,new ByteArrayInputStream(thumbnailBytes),null);
             }
-
+            fileInfo.setUploadEndTime(new Date());
             return true;
         } catch (IOException e) {
             cos.deleteObject(bucketName,newFileKey);

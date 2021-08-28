@@ -16,6 +16,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 import java.util.function.Consumer;
 
 /**
@@ -63,7 +64,7 @@ public class UpyunUssFileStorage implements FileStorage {
                     throw new UpException(thResult.toString());
                 }
             }
-
+            fileInfo.setUploadEndTime(new Date());
             return true;
         } catch (IOException | UpException e) {
             try {

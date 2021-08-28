@@ -60,6 +60,11 @@ public class FileInfo implements Serializable {
     private String client;
 
     /**
+     * 存储平台
+     */
+    private String clientType;
+
+    /**
      * 缩略图访问路径
      */
     private String thUrl;

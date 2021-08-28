@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.function.Consumer;
 
 /**
@@ -59,7 +60,7 @@ public class MinIOFileStorage implements FileStorage {
                 fileInfo.setThUrl(domain + newThFileKey);
                 client.putObject(bucketName,newThFileKey,new ByteArrayInputStream(thumbnailBytes),new PutObjectOptions(thumbnailBytes.length,-1));
             }
-
+            fileInfo.setUploadEndTime(new Date());
             return true;
         } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidBucketNameException | InvalidKeyException | InvalidResponseException | IOException | NoSuchAlgorithmException | XmlParserException e) {
             try {

@@ -8,6 +8,9 @@ import lombok.Data;
 
 import java.util.Date;
 
+import static com.zc.file.admin.config.ZcFileCons.SystemType.MAC;
+import static com.zc.file.admin.config.ZcFileCons.SystemType.WIN;
+
 @Data
 @TableName(value = "z_file_config")
 public class ZFileConfig {
@@ -61,12 +64,28 @@ public class ZFileConfig {
     */
     @TableField(value = "bucket")
     private String bucket;
+    /**
+    * bucket名称
+    */
+    @TableField(value = "path_patterns")
+    private String pathPatterns;
 
     /**
     * 基础路径
     */
     @TableField(value = "base_path")
     private String basePath;
+    /**
+    * MAC下基础路径，只在local下起作用
+    */
+    @TableField(value = "mac_base_path")
+    private String macBasePath;
+
+    /**
+    * LINUX下基础路径，只在local下起作用
+    */
+    @TableField(value = "linux_base_path")
+    private String linuxBasePath;
 
     /**
     * 1启用 0禁用
@@ -79,4 +98,14 @@ public class ZFileConfig {
 
     @TableField(value = "update_time")
     private Date updateTime;
+
+    public String getBasePath(){
+        String os = System.getProperty("os.name");
+        if(os.toLowerCase().startsWith(WIN)) {
+            return basePath;
+        } else if(os.toLowerCase().startsWith(MAC)){
+            return macBasePath;
+        }
+        return linuxBasePath;
+    }
 }

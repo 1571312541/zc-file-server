@@ -5,9 +5,9 @@ spring:
   profiles:
     active: xu-dev
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/zc-file-server?characterEncoding=UTF-8&useUnicode=true&useSSL=false&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://39.105.135.102:3306/zc-file-server?characterEncoding=UTF-8&useUnicode=true&useSSL=false&serverTimezone=Asia/Shanghai
     username: root
-    password: zc@123
+    password: zc@123@ZC
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   file-storage: #文件存储配置，不使用的情况下可以不写
@@ -16,10 +16,12 @@ spring:
     local: # 本地存储
       - platform: local-1 # 存储平台标识
         enable-storage: false  #启用存储
-        enable-access: true #启用访问（线上请使用 Nginx 配置，效率更高）
+        enable-access: false #启用访问（线上请使用 Nginx 配置，效率更高）
         domain: "" # 访问域名，例如：“http://127.0.0.1:8030/test/file/”，注意后面要和 path-patterns 保持一致，“/”结尾，本地存储建议使用相对路径，方便后期更换域名
-        base-path: F:/code/minip/spring-file-storage-main/ # 存储地址
-        path-patterns: /test/file/** # 访问路径，开启 enable-access 后，通过此路径可以访问到上传的文件
+        base-path: E:\dev\codes\java\zc-file-server\upload\ # 存储地址
+        macBasePath: /home/upload/ # 存储地址
+        linuxBasePath: ~/upload/ # 存储地址
+        path-patterns: /** # 访问路径，开启 enable-access 后，通过此路径可以访问到上传的文件
     huawei-obs: # 华为云 OBS ，不使用的情况下可以不写
       - platform: huawei-obs-1 # 存储平台标识
         enable-storage: false  # 启用存储

@@ -7,10 +7,12 @@ import com.zc.file.UploadPretreatment;
 import com.zc.file.exception.FileStorageRuntimeException;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.function.Consumer;
 
 /**
@@ -33,6 +35,9 @@ public class LocalFileStorage implements FileStorage {
 
         File newFile = FileUtil.touch(basePath + path,fileInfo.getFilename());
         fileInfo.setBasePath(basePath);
+        if (StringUtils.isBlank(domain)) {
+            domain = "";
+        }
         fileInfo.setUrl(domain + path + fileInfo.getFilename());
 
         try {
@@ -43,6 +48,7 @@ public class LocalFileStorage implements FileStorage {
                 fileInfo.setThUrl(domain + path + fileInfo.getThFilename());
                 FileUtil.writeBytes(thumbnailBytes,basePath + path + fileInfo.getThFilename());
             }
+            fileInfo.setUploadEndTime(new Date());
             return true;
         } catch (IOException e) {
             FileUtil.del(newFile);

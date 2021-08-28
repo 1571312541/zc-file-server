@@ -13,6 +13,7 @@ import lombok.Setter;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.function.Consumer;
 
 /**
@@ -58,7 +59,7 @@ public class AliyunOssFileStorage implements FileStorage {
                 fileInfo.setThUrl(domain + newThFileKey);
                 oss.putObject(bucketName,newThFileKey,new ByteArrayInputStream(thumbnailBytes));
             }
-
+            fileInfo.setUploadEndTime(new Date());
             return true;
         } catch (IOException e) {
             oss.deleteObject(bucketName,newFileKey);

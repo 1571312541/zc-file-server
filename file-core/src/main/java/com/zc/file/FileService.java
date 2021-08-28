@@ -28,9 +28,9 @@ import java.util.function.Predicate;
  */
 @Getter
 @Setter
-public class FileStorageService {
+public class FileService {
 
-    private FileStorageService self;
+    private FileService self;
     private FileRecorder fileRecorder;
     private CopyOnWriteArrayList<FileStorage> fileStorageList;
     private FileStorageProperties properties;
@@ -81,6 +81,7 @@ public class FileStorageService {
 
         FileInfo fileInfo = new FileInfo();
         fileInfo.setCreateTime(new Date());
+        fileInfo.setUploadStartTime(new Date());
         fileInfo.setSize(file.getSize());
         fileInfo.setOriginalFilename(file.getOriginalFilename());
         fileInfo.setSuffix(FileNameUtil.getSuffix(file.getOriginalFilename()));
@@ -223,9 +224,9 @@ public class FileStorageService {
     /**
      * 创建上传预处理器
      */
-    public UploadPretreatment of() {
+    public UploadPretreatment build() {
         UploadPretreatment pre = new UploadPretreatment();
-        pre.setFileStorageService(self);
+        pre.setFileService(self);
         pre.setPlatform(properties.getDefaultPlatform());
         pre.setThumbnailSuffix(properties.getThumbnailSuffix());
         return pre;
@@ -234,8 +235,8 @@ public class FileStorageService {
     /**
      * 根据 MultipartFile 创建上传预处理器
      */
-    public UploadPretreatment of(MultipartFile file) {
-        UploadPretreatment pre = of();
+    public UploadPretreatment build(MultipartFile file) {
+        UploadPretreatment pre = build();
         pre.setFileWrapper(new MultipartFileWrapper(file));
         return pre;
     }
@@ -243,8 +244,8 @@ public class FileStorageService {
     /**
      * 根据 byte[] 创建上传预处理器，name 为空字符串
      */
-    public UploadPretreatment of(byte[] bytes) {
-        UploadPretreatment pre = of();
+    public UploadPretreatment build(byte[] bytes) {
+        UploadPretreatment pre = build();
         pre.setFileWrapper(new MultipartFileWrapper(new MockMultipartFile("",bytes)));
         return pre;
     }
@@ -252,9 +253,9 @@ public class FileStorageService {
     /**
      * 根据 InputStream 创建上传预处理器，originalFilename 为空字符串
      */
-    public UploadPretreatment of(InputStream in) {
+    public UploadPretreatment build(InputStream in) {
         try {
-            UploadPretreatment pre = of();
+            UploadPretreatment pre = build();
             pre.setFileWrapper(new MultipartFileWrapper(new MockMultipartFile("",in)));
             return pre;
         } catch (Exception e) {
@@ -265,9 +266,9 @@ public class FileStorageService {
     /**
      * 根据 File 创建上传预处理器，originalFilename 为 file 的 name
      */
-    public UploadPretreatment of(File file) {
+    public UploadPretreatment build(File file) {
         try {
-            UploadPretreatment pre = of();
+            UploadPretreatment pre = build();
             pre.setFileWrapper(new MultipartFileWrapper(new MockMultipartFile(file.getName(),file.getName(),null,new FileInputStream(file))));
             return pre;
         } catch (Exception e) {
@@ -278,9 +279,9 @@ public class FileStorageService {
     /**
      * 根据 URL 创建上传预处理器，originalFilename 为空字符串
      */
-    public UploadPretreatment of(URL url) {
+    public UploadPretreatment build(URL url) {
         try {
-            UploadPretreatment pre = of();
+            UploadPretreatment pre = build();
             pre.setFileWrapper(new MultipartFileWrapper(new MockMultipartFile("",url.openStream())));
             return pre;
         } catch (Exception e) {
@@ -291,9 +292,9 @@ public class FileStorageService {
     /**
      * 根据 URI 创建上传预处理器，originalFilename 为空字符串
      */
-    public UploadPretreatment of(URI uri) {
+    public UploadPretreatment build(URI uri) {
         try {
-            return of(uri.toURL());
+            return build(uri.toURL());
         } catch (Exception e) {
             throw new FileStorageRuntimeException("根据 URI 创建上传预处理器失败！",e);
         }
@@ -302,9 +303,9 @@ public class FileStorageService {
     /**
      * 根据 url 字符串创建上传预处理器，兼容Spring的ClassPath路径、文件路径、HTTP路径等，originalFilename 为空字符串
      */
-    public UploadPretreatment of(String url) {
+    public UploadPretreatment build(String url) {
         try {
-            return of(URLUtil.url(url));
+            return build(URLUtil.url(url));
         } catch (Exception e) {
             throw new FileStorageRuntimeException("根据 url：" + url + " 创建上传预处理器失败！",e);
         }

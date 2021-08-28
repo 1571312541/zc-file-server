@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 @Setter
 @Accessors(chain = true)
 public class UploadPretreatment {
-    private FileStorageService fileStorageService;
+    private FileService fileService;
     /**
      * 要上传到的平台
      */
@@ -206,6 +206,6 @@ public class UploadPretreatment {
      * 上传文件，成功返回文件信息，失败返回null
      */
     public FileInfo upload() {
-        return fileStorageService.upload(this);
+        return fileService.upload(this);
     }
 }

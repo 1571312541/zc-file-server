@@ -70,6 +70,14 @@ public class FileStorageProperties {
          */
         private String basePath = "";
         /**
+         * 本地存储路径
+         */
+        private String macBasePath = "";
+        /**
+         * 本地存储路径
+         */
+        private String linuxBasePath = "";
+        /**
          * 本地存储访问路径
          */
         private String[] pathPatterns = new String[0];
@@ -89,6 +97,15 @@ public class FileStorageProperties {
          * 访问域名
          */
         private String domain = "";
+        public String getBasePath(){
+            String os = System.getProperty("os.name");
+            if(os.toLowerCase().startsWith("win")) {
+                return basePath;
+            } else if(os.toLowerCase().startsWith("mac")){
+                return macBasePath;
+            }
+            return linuxBasePath;
+        }
     }
 
     /**

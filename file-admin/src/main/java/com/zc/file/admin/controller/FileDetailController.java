@@ -1,7 +1,7 @@
 package com.zc.file.admin.controller;
 
 import com.zc.file.FileInfo;
-import com.zc.file.FileStorageService;
+import com.zc.file.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,14 +12,14 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileDetailController {
 
     @Autowired
-    private FileStorageService fileStorageService;
+    private FileService fileService;
 
     /**
      * 上传文件，成功返回文件 url
      */
     @PostMapping("/upload")
     public String upload(MultipartFile file) {
-        FileInfo fileInfo = fileStorageService.of(file)
+        FileInfo fileInfo = fileService.build(file)
                 .setPath("upload/") //保存到相对路径下，为了方便管理，不需要可以不写
                 .setObjectId("0")   //关联对象id，为了方便管理，不需要可以不写
                 .setObjectType("0") //关联对象类型，为了方便管理，不需要可以不写
@@ -33,7 +33,7 @@ public class FileDetailController {
      */
     @PostMapping("/upload-image")
     public FileInfo uploadImage(MultipartFile file) {
-        return fileStorageService.of(file)
+        return fileService.build(file)
                 .image(img -> img.size(1000,1000))  //将图片大小调整到 1000*1000
                 .thumbnail(th -> th.size(200,200))  //再生成一张 200*200 的缩略图
                 .upload();
@@ -44,7 +44,7 @@ public class FileDetailController {
      */
     @PostMapping("/upload-platform")
     public FileInfo uploadPlatform(MultipartFile file) {
-        return fileStorageService.of(file)
+        return fileService.build(file)
                 .setPlatform("aliyun-oss-1")    //使用指定的存储平台
                 .upload();
     }

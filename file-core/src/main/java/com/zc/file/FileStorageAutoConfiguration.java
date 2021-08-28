@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Configuration
-@ConditionalOnMissingBean(FileStorageService.class)
+@ConditionalOnMissingBean(FileService.class)
 public class FileStorageAutoConfiguration implements WebMvcConfigurer {
 
     @Autowired
@@ -40,7 +40,10 @@ public class FileStorageAutoConfiguration implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         for (FileStorageProperties.Local local : properties.getLocal()) {
             if (local.getEnableAccess()) {
-                registry.addResourceHandler(local.getPathPatterns()).addResourceLocations("file:" + local.getBasePath());
+                log.info("添加静态资源访问========{}{}",local.getPathPatterns(),local.getBasePath());
+                registry.addResourceHandler(local.getPathPatterns())
+                        .addResourceLocations("file:" + local.getBasePath().replace("\\","/"))
+                        .setCachePeriod(0);
             }
         }
     }
@@ -260,11 +263,11 @@ public class FileStorageAutoConfiguration implements WebMvcConfigurer {
      * 文件存储服务
      */
     @Bean
-    public FileStorageService fileStorageService(FileRecorder fileRecorder,
-                                                 List<List<? extends FileStorage>> fileStorageLists,
-                                                 List<FileStorageAspect> aspectList) {
+    public FileService fileStorageService(FileRecorder fileRecorder,
+                                          List<List<? extends FileStorage>> fileStorageLists,
+                                          List<FileStorageAspect> aspectList) {
         this.initDetect();
-        FileStorageService service = new FileStorageService();
+        FileService service = new FileService();
         service.setFileStorageList(new CopyOnWriteArrayList<>());
         fileStorageLists.forEach(service.getFileStorageList()::addAll);
         service.setFileRecorder(fileRecorder);
@@ -278,7 +281,7 @@ public class FileStorageAutoConfiguration implements WebMvcConfigurer {
      */
     @EventListener(ContextRefreshedEvent.class)
     public void onContextRefreshedEvent() {
-        FileStorageService service = applicationContext.getBean(FileStorageService.class);
+        FileService service = applicationContext.getBean(FileService.class);
         service.setSelf(service);
     }
 

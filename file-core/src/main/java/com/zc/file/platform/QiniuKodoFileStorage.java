@@ -17,6 +17,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Date;
 import java.util.function.Consumer;
 
 /**
@@ -68,7 +69,7 @@ public class QiniuKodoFileStorage implements FileStorage {
                 fileInfo.setThUrl(domain + newThFileKey);
                 uploadManager.put(new ByteArrayInputStream(thumbnailBytes),newThFileKey,token,null,null);
             }
-
+            fileInfo.setUploadEndTime(new Date());
             return true;
         } catch (IOException e) {
             try {

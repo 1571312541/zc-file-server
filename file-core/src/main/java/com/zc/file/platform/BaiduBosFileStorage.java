@@ -15,6 +15,7 @@ import lombok.Setter;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.function.Consumer;
 
 /**
@@ -64,7 +65,7 @@ public class BaiduBosFileStorage implements FileStorage {
                 fileInfo.setThUrl(domain + newThFileKey);
                 bos.putObject(bucketName,newThFileKey,new ByteArrayInputStream(thumbnailBytes));
             }
-
+            fileInfo.setUploadEndTime(new Date());
             return true;
         } catch (IOException e) {
             bos.deleteObject(bucketName,newFileKey);
