@@ -87,10 +87,11 @@ public class FileService {
         fileInfo.setSuffix(FileNameUtil.getSuffix(file.getOriginalFilename()));
         fileInfo.setObjectId(pre.getObjectId());
         fileInfo.setObjectType(pre.getObjectType());
+        fileInfo.setRemark(pre.getRemark());
         fileInfo.setPath(pre.getPath());
         fileInfo.setClient(pre.getPlatform());
         if (StrUtil.isNotBlank(pre.getSaveFilename())) {
-            fileInfo.setFilename(pre.getSaveFilename());
+            fileInfo.setFilename(pre.getSaveFilename()+ (StrUtil.isEmpty(fileInfo.getSuffix()) ? StrUtil.EMPTY : "." + fileInfo.getSuffix()));
         } else {
             fileInfo.setFilename(IdUtil.objectId() + (StrUtil.isEmpty(fileInfo.getSuffix()) ? StrUtil.EMPTY : "." + fileInfo.getSuffix()));
         }

@@ -3,6 +3,7 @@ package com.zc.file;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.file.FileNameUtil;
 import com.zc.file.exception.FileStorageRuntimeException;
+import com.zc.file.vo.ImgSize;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -47,6 +48,14 @@ public class UploadPretreatment {
      * 文件所属对象类型
      */
     private String objectType;
+    /**
+     * 备注
+     */
+    private String remark;
+    /**
+     * 图片和缩略图大小
+     */
+    private ImgSize imgSize;
     /**
      * 文件存储路径
      */

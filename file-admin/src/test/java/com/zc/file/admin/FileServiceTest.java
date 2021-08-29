@@ -31,7 +31,7 @@ class FileServiceTest {
         InputStream in = this.getClass().getClassLoader().getResourceAsStream(filename);
         FileInfo fileInfo = fileService.build(in).setPath("aab/")
                 .setPlatform("local-2")
-                .setName("file")
+                .setSaveFilename("filse")
                 .setOriginalFilename(filename)
                 .thumbnail().upload();
         Assert.notNull(fileInfo,"文件上传失败！");
