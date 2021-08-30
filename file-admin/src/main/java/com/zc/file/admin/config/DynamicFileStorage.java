@@ -19,6 +19,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class DynamicFileStorage {
     @Autowired
     private ZFileConfigService zFileConfigService;
+
     @Autowired
     private FileService fileService;
 

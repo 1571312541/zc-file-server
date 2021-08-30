@@ -39,8 +39,8 @@ public class FileDetailController {
      * 上传文件，成功返回文件 url
      * 默认originalFilename 为空字符串
      */
-    @PostMapping("/uploadByStream")
-    public String upload(InputStream inputStream, UploadPretreatment pr) {
+    @PostMapping("/uploadStream")
+    public String uploadStream(InputStream inputStream, UploadPretreatment pr) {
         FileInfo fileInfo = fileService.build(inputStream)
                 .setPlatform(pr.getPlatform())
                 .setName(pr.getName())
@@ -57,8 +57,8 @@ public class FileDetailController {
      * 上传文件，成功返回文件 url
      * 默认originalFilename 为空字符串
      */
-    @PostMapping("/uploadByFile")
-    public String upload(File file, UploadPretreatment pr) {
+    @PostMapping("/uploadFile")
+    public String uploadFile(File file, UploadPretreatment pr) {
         FileInfo fileInfo = fileService.build(file)
                 .setPlatform(pr.getPlatform())
                 .setName(pr.getName())
@@ -76,8 +76,8 @@ public class FileDetailController {
      * 上传文件，成功返回文件 url
      * 默认originalFilename 为空字符串
      */
-    @PostMapping("/uploadByUrl")
-    public String upload(String url, UploadPretreatment pr) {
+    @PostMapping("/uploadUrl")
+    public String uploadUrl(String url, UploadPretreatment pr) {
         FileInfo fileInfo = fileService.build(url)
                 .setPlatform(pr.getPlatform())
                 .setName(pr.getName())
@@ -97,7 +97,7 @@ public class FileDetailController {
      * 图片处理使用的是 https://github.com/coobird/thumbnailator
      */
     @PostMapping("/uploadImg")
-    public FileInfo uploadImage(MultipartFile file, UploadPretreatment pr) {
+    public FileInfo uploadImg(MultipartFile file, UploadPretreatment pr) {
         return fileService.build(file)
                 .setPlatform(pr.getPlatform())
                 .setName(pr.getName())
@@ -118,7 +118,7 @@ public class FileDetailController {
      * 图片处理使用的是 https://github.com/coobird/thumbnailator
      */
     @PostMapping("/uploadImgFile")
-    public FileInfo uploadImage(File file, UploadPretreatment pr) {
+    public FileInfo uploadImgFile(File file, UploadPretreatment pr) {
         return fileService.build(file)
                 .setPlatform(pr.getPlatform())
                 .setName(pr.getName())
@@ -138,8 +138,8 @@ public class FileDetailController {
      * 上传图片，成功返回文件信息
      * 图片处理使用的是 https://github.com/coobird/thumbnailator
      */
-    @PostMapping("/uploadImgInputStream")
-    public FileInfo uploadImage(InputStream inputStream, UploadPretreatment pr) {
+    @PostMapping("/uploadImgStream")
+    public FileInfo uploadImgStream(InputStream inputStream, UploadPretreatment pr) {
         return fileService.build(inputStream)
                 .setPlatform(pr.getPlatform())
                 .setName(pr.getName())
@@ -160,7 +160,7 @@ public class FileDetailController {
      * 图片处理使用的是 https://github.com/coobird/thumbnailator
      */
     @PostMapping("/uploadImgUrl")
-    public FileInfo uploadImage(String url, UploadPretreatment pr) {
+    public FileInfo uploadImgUrl(String url, UploadPretreatment pr) {
         return fileService.build(url)
                 .setPlatform(pr.getPlatform())
                 .setName(pr.getName())
