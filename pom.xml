@@ -9,17 +9,17 @@
         <version>2.4.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.zc.file</groupId>
-    <artifactId>zc-file-server</artifactId>
+    <groupId>com.z.util.file</groupId>
+    <artifactId>z-file-server</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.1</version>
+    <version>1.2.2</version>
 
-    <name>zc-file-server</name>
+    <name>z-file-server</name>
 
 
     <modules>
-        <module>file-core</module>
-        <module>file-admin</module>
+        <module>z-file-core</module>
+        <module>z-file-admin</module>
     </modules>
 
     <properties>
