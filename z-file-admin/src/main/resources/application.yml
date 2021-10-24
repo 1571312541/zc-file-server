@@ -17,7 +17,7 @@ spring:
       - platform: local-1 # 存储平台标识
         enable-storage: true  #启用存储
         domain: "" # 访问域名，例如：“http://127.0.0.1:8030/file/”，注意后面要和 path-patterns 保持一致，“/”结尾，本地存储建议使用相对路径，方便后期更换域名
-        base-path: E:\dev\codes\java\zc-file-server\upload\ # 存储地址
+        base-path: E:\dev\codes\java\z-file-server\upload\ # 存储地址
         macBasePath: /home/upload/ # 存储地址
         linuxBasePath: ~/upload/ # 存储地址
         path-patterns: /file/** # 访问路径，通过此路径可以访问到上传的文件

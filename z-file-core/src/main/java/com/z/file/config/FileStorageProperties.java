@@ -1,4 +1,4 @@
-package com.z.file;
+package com.z.file.config;
 
 import lombok.Data;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

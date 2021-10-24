@@ -1,6 +1,7 @@
-package com.z.file;
+package com.z.file.config;
 
 import cn.hutool.core.collection.CollUtil;
+import com.z.file.FileService;
 import com.z.file.aspect.FileStorageAspect;
 import com.z.file.platform.*;
 import com.z.file.recorder.DefaultFileRecorder;

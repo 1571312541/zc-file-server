@@ -8,6 +8,7 @@ import com.z.file.aspect.DeleteAspectChain;
 import com.z.file.aspect.ExistsAspectChain;
 import com.z.file.aspect.FileStorageAspect;
 import com.z.file.aspect.UploadAspectChain;
+import com.z.file.config.FileStorageProperties;
 import com.z.file.exception.FileStorageRuntimeException;
 import com.z.file.platform.FileStorage;
 import com.z.file.recorder.FileRecorder;

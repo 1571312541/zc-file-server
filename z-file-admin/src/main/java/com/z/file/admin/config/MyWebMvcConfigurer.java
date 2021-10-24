@@ -2,7 +2,7 @@ package com.z.file.admin.config;
 
 import com.z.file.admin.model.ZFileConfig;
 import com.z.file.admin.service.ZFileConfigService;
-import com.z.file.FileStorageProperties;
+import com.z.file.config.FileStorageProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

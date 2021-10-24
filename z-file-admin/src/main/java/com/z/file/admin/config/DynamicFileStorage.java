@@ -1,14 +1,14 @@
 package com.z.file.admin.config;
 
+import com.z.file.FileService;
 import com.z.file.admin.model.ZFileConfig;
 import com.z.file.admin.service.ZFileConfigService;
-import com.z.file.FileService;
-import com.z.file.FileStorageProperties;
 import com.z.file.platform.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -16,16 +16,15 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * 动态存储平台设置
  */
 @Slf4j
-@Component
+@Configuration
 public class DynamicFileStorage {
     @Autowired
     private ZFileConfigService zFileConfigService;
-    @Autowired
-    private FileStorageProperties fileStorageProperties;
 
     @Autowired
     private FileService fileService;
 
+    @PostConstruct
     public void init() {
         log.info("开始加载动态文件源 begin");
         //数据库获取动态文件源配置
@@ -163,9 +162,5 @@ public class DynamicFileStorage {
         }
         log.info("加载动态文件源结束 end");
     }
-    public void remove(String platform){
-//        for (LocalFileStorage localFileStorage : list) {
-//
-//        }
-    }
+
 }

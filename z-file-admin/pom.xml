@@ -121,7 +121,7 @@
     </dependencies>
 
     <build>
-        <finalName>zc-file-server</finalName>
+        <finalName>z-file-server</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

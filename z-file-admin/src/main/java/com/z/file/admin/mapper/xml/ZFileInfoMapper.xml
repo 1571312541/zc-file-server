@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zc.file.admin.mapper.ZFileInfoMapper">
+<mapper namespace="com.z.file.admin.mapper.ZFileInfoMapper">
   <resultMap id="BaseResultMap" type="com.z.file.admin.model.ZFileInfo">
     <!--@mbg.generated-->
     <!--@Table file_detail-->

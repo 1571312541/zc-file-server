@@ -175,7 +175,7 @@
     <logger name="jdbc.audit" level="OFF" additivity="false">
         <appender-ref ref="CONSOLE" />
     </logger>
-    <logger name="com.zc.file.admin" level="debug" additivity="false">
+    <logger name="com.z.file.admin" level="debug" additivity="false">
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="DEBUG_FILE"/>
     </logger>
