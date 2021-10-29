@@ -5,9 +5,10 @@
 
 
     <parent>
-        <groupId>com.z.util.file</groupId>
-        <artifactId>z-file-server</artifactId>
-        <version>1.2.2</version>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.4.0</version>
+        <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
 
@@ -81,6 +82,7 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-core</artifactId>
+            <version>5.5.2</version>
         </dependency>
 
         <dependency>

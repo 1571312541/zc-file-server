@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.File;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -29,8 +30,22 @@ class FileServiceTest {
 
         String filename = "image.jpg";
         InputStream in = this.getClass().getClassLoader().getResourceAsStream(filename);
-        FileInfo fileInfo = fileService.build(in)
+        FileInfo fileInfo = fileService.build(in).setPlatform("minio-1")
                 .setOriginalFilename(filename)
+                .thumbnail().upload();
+        Assert.notNull(fileInfo,"文件上传失败！");
+        log.info("文件上传成功：{}",fileInfo.toString());
+        Thread.sleep(10000);
+    }
+    /**
+     * 单独对文件上传进行测试
+     */
+    @Test
+    public void upload2() throws InterruptedException {
+
+        String filename = "C:\\Users\\zchao\\Desktop\\mujia1.jpg";
+        File file = new File(filename);
+        FileInfo fileInfo = fileService.build(file)
                 .thumbnail().upload();
         Assert.notNull(fileInfo,"文件上传失败！");
         log.info("文件上传成功：{}",fileInfo.toString());

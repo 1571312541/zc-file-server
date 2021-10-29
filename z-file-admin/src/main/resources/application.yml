@@ -92,3 +92,8 @@ spring:
         bucket-name: ？？
         domain: ?? # 访问域名，注意“/”结尾，例如：https://abc.hn-bkt.clouddn.com/
         base-path: s3/ # 基础路径
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB

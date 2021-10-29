@@ -1,9 +1,12 @@
 package com.z.file.admin.controller;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.z.file.FileInfo;
 import com.z.file.FileService;
 import com.z.file.UploadPretreatment;
+import com.z.file.admin.vo.FilePretreatment;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,18 +24,43 @@ public class FileDetailController {
     /**
      * 上传文件，成功返回文件 url
      */
+    @GetMapping
+    public String test() {
+        return "start server success";
+    }
+    // url byte inputstream 上传时 originalFilename 为空字符串
+    /**
+     * 上传文件，成功返回文件 url
+     */
     @PostMapping("/upload")
-    public String upload(MultipartFile file, UploadPretreatment pr) {
-        FileInfo fileInfo = fileService.build(file)
-                .setPlatform(pr.getPlatform())
-                .setName(pr.getName())
-                .setPath(pr.getPath())
-                .setOriginalFilename(pr.getOriginalFilename())
-                .setSaveFilename(pr.getSaveFilename())
-                .setObjectId(pr.getObjectId())
-                .setObjectType(pr.getObjectType())
-                .setRemark(pr.getRemark())
-                .upload();
+    public String upload(MultipartFile file, FilePretreatment pr) {
+
+        UploadPretreatment build = fileService.build(file)
+                .setPlatform(pr.getPlatform());
+        if (ObjectUtil.isNotEmpty(pr.getPath())) {
+            build.setPath(pr.getPath());
+        }
+        if (ObjectUtil.isNotNull(pr.getOriginalFilename())) {
+            build.setOriginalFilename(pr.getOriginalFilename());
+        }
+        if (ObjectUtil.isNotEmpty(pr.getSaveFilename())) {
+            build.setSaveFilename(pr.getSaveFilename());
+        }
+        if (ObjectUtil.isNotEmpty(pr.getObjectId())) {
+            build.setObjectId(pr.getObjectId());
+        }
+        if (ObjectUtil.isNotEmpty(pr.getObjectType())) {
+            build.setObjectType(pr.getObjectType());
+        }
+        if (ObjectUtil.isNotEmpty(pr.getObjectType())) {
+            build.setRemark(pr.getRemark());
+        }
+
+        if (pr.getThumbnail()) {
+            build.thumbnail(pr.getThumWidth(), pr.getThumHeight());
+        }
+
+        FileInfo fileInfo = build.upload();
         return fileInfo == null ? "上传失败！" : fileInfo.getUrl();
     }
     /**

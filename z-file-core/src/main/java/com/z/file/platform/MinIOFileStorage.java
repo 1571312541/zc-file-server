@@ -1,5 +1,6 @@
 package com.z.file.platform;
 
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.z.file.FileInfo;
 import com.z.file.UploadPretreatment;
@@ -52,13 +53,21 @@ public class MinIOFileStorage implements FileStorage {
 
         MinioClient client = getMiClient();
         try {
-            client.putObject(bucketName,newFileKey,pre.getFileWrapper().getInputStream(),new PutObjectOptions(pre.getFileWrapper().getSize(),-1));
+            PutObjectOptions options = new PutObjectOptions(pre.getFileWrapper().getSize(), -1);
+            if (ObjectUtil.isNotNull(pre.getFileWrapper().getContentType())) {
+                options.setContentType(pre.getFileWrapper().getContentType());
+            }
+            client.putObject(bucketName,newFileKey,pre.getFileWrapper().getInputStream(), options);
 
             byte[] thumbnailBytes = pre.getThumbnailBytes();
             if (thumbnailBytes != null) { //上传缩略图
                 String newThFileKey = basePath + fileInfo.getPath() + fileInfo.getThFilename();
                 fileInfo.setThUrl(domain + newThFileKey);
-                client.putObject(bucketName,newThFileKey,new ByteArrayInputStream(thumbnailBytes),new PutObjectOptions(thumbnailBytes.length,-1));
+                PutObjectOptions thumOptions = new PutObjectOptions(thumbnailBytes.length, -1);
+                if (ObjectUtil.isNotNull(pre.getFileWrapper().getContentType())) {
+                    thumOptions.setContentType(pre.getFileWrapper().getContentType());
+                }
+                client.putObject(bucketName,newThFileKey,new ByteArrayInputStream(thumbnailBytes), thumOptions);
             }
             fileInfo.setUploadEndTime(new Date());
             return true;
