@@ -1,5 +1,6 @@
 # 在springboot自动扫描包时，将z-file-core中的Bean也扫描进去
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.z.file.config.FileStorageAutoConfiguration,\
-  com.z.file.config.FileStorageProperties
+  com.z.file.config.FileStorageProperties,\
+  com.z.file.config.FileStorageAutoConfiguration
+
 

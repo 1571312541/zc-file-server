@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Configuration
+@Order(999999999)
 @ConditionalOnMissingBean(FileService.class)
 public class FileStorageAutoConfiguration implements WebMvcConfigurer {
 
@@ -40,7 +42,7 @@ public class FileStorageAutoConfiguration implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         for (FileStorageProperties.Local local : properties.getLocal()) {
-            if (local.getEnableStorage()) {
+            if (local.getEnableStorage() && local.getPathPatterns().length > 0) {
                 log.info("添加静态资源访问========{}{}",local.getPathPatterns(),local.getBasePath());
                 registry.addResourceHandler(local.getPathPatterns())
                         .addResourceLocations("file:" + local.getBasePath().replace("\\","/"))
