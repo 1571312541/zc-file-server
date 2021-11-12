@@ -1,7 +1,7 @@
 package com.z.file.aspect;
 
-import com.z.file.FileInfo;
-import com.z.file.UploadPretreatment;
+import com.z.file.entity.FileInfo;
+import com.z.file.entity.UploadPretreatment;
 import com.z.file.platform.FileStorage;
 import com.z.file.recorder.FileRecorder;
 

@@ -1,9 +1,9 @@
 package com.z.file.admin.controller;
 
 import cn.hutool.core.util.ObjectUtil;
-import com.z.file.FileInfo;
+import com.z.file.entity.FileInfo;
 import com.z.file.FileService;
-import com.z.file.UploadPretreatment;
+import com.z.file.entity.UploadPretreatment;
 import com.z.file.admin.vo.FilePretreatment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

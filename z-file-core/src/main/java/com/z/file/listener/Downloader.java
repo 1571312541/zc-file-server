@@ -1,10 +1,11 @@
-package com.z.file;
+package com.z.file.listener;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import com.z.file.aspect.DownloadAspectChain;
 import com.z.file.aspect.DownloadThAspectChain;
 import com.z.file.aspect.FileStorageAspect;
+import com.z.file.entity.FileInfo;
 import com.z.file.exception.FileStorageRuntimeException;
 import com.z.file.platform.FileStorage;
 

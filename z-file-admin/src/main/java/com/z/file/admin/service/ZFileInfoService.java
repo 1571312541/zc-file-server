@@ -7,7 +7,7 @@ import com.z.file.admin.model.ZFileInfo;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.z.file.FileInfo;
+import com.z.file.entity.FileInfo;
 import com.z.file.recorder.FileRecorder;
 
 /**

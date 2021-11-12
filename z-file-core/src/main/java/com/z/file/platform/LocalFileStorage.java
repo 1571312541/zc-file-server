@@ -2,8 +2,8 @@ package com.z.file.platform;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
-import com.z.file.FileInfo;
-import com.z.file.UploadPretreatment;
+import com.z.file.entity.FileInfo;
+import com.z.file.entity.UploadPretreatment;
 import com.z.file.exception.FileStorageRuntimeException;
 import lombok.Getter;
 import lombok.Setter;
@@ -58,10 +58,16 @@ public class LocalFileStorage implements FileStorage {
 
     @Override
     public boolean delete(FileInfo fileInfo) {
-        if (fileInfo.getThFilename() != null) {   //删除缩略图
-            FileUtil.del(new File(fileInfo.getBasePath() + fileInfo.getPath(),fileInfo.getThFilename()));
+        String path = fileInfo.getPath();
+        //删除缩略图
+        if (fileInfo.getThFilename() != null) {
+            if (StringUtils.isBlank(fileInfo.getPath())) {
+                path = "";
+            }
+            FileUtil.del(new File(fileInfo.getBasePath() + path,fileInfo.getThFilename()));
         }
-        return FileUtil.del(new File(fileInfo.getBasePath() + fileInfo.getPath(),fileInfo.getFilename()));
+        // 删除
+        return FileUtil.del(new File(fileInfo.getBasePath() + path,fileInfo.getFilename()));
     }
 
 

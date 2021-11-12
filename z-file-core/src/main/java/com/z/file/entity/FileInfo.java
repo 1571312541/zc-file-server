@@ -1,4 +1,4 @@
-package com.z.file;
+package com.z.file.entity;
 
 
 import lombok.Data;

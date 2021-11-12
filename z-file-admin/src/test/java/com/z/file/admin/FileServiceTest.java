@@ -2,8 +2,9 @@ package com.z.file.admin;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.Assert;
-import com.z.file.FileInfo;
+import com.z.file.entity.FileInfo;
 import com.z.file.FileService;
+import com.z.file.listener.ProgressListener;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,13 +114,35 @@ class FileServiceTest {
 
         FileInfo fileInfo = fileService.build(in).setOriginalFilename(filename).setPath("test/").setObjectId("0").setObjectType("0").setSaveFilename("aaa.jpg").setSaveThFilename("bbb").thumbnail(200,200).upload();
         Assert.notNull(fileInfo,"文件上传失败！");
-
+        // 下载为字节数组,监听下载进度1
         byte[] bytes = fileService.download(fileInfo).setProgressMonitor((progressSize, allSize) ->
                 log.info("文件下载进度：{} {}%",progressSize,progressSize * 100 / allSize)
         ).bytes();
         Assert.notNull(bytes,"文件下载失败！");
         log.info("文件下载成功，文件大小：{}",bytes.length);
 
+        // 下载到指定文件 监听下载进度2
+        fileService.download(fileInfo).setProgressMonitor(progressSize ->
+                System.out.println("已下载：" + progressSize)
+        ).file("C:\\a.jpg");
+        // 方式三 监听下载进度3
+        fileService.download(fileInfo).setProgressMonitor(new ProgressListener() {
+            @Override
+            public void start() {
+                System.out.println("下载开始");
+            }
+
+            @Override
+            public void progress(long progressSize,long allSize) {
+                System.out.println("已下载 " + progressSize + " 总大小" + allSize);
+            }
+
+            @Override
+            public void finish() {
+                System.out.println("下载结束");
+            }
+        }).file("C:\\b.jpg");
+        // 下载缩略图为字节数组
         byte[] thBytes = fileService.downloadTh(fileInfo).setProgressMonitor((progressSize, allSize) ->
                 log.info("缩略图文件下载进度：{} {}%",progressSize,progressSize * 100 / allSize)
         ).bytes();

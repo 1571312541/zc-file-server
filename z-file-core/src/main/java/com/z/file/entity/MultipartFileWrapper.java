@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.z.file;
+package com.z.file.entity;
 
 import lombok.Getter;
 import lombok.Setter;

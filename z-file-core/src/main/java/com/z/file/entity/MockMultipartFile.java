@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.z.file;
+package com.z.file.entity;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;

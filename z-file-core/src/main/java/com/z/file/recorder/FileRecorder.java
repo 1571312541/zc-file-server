@@ -1,6 +1,6 @@
 package com.z.file.recorder;
 
-import com.z.file.FileInfo;
+import com.z.file.entity.FileInfo;
 
 /**
  * 文件记录记录者接口

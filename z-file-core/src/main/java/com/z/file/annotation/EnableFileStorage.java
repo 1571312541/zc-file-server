@@ -1,4 +1,4 @@
-package com.z.file;
+package com.z.file.annotation;
 
 import com.z.file.config.FileStorageAutoConfiguration;
 import com.z.file.config.FileStorageProperties;

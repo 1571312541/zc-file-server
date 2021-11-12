@@ -1,8 +1,8 @@
 package com.z.file.platform;
 
 import cn.hutool.core.util.StrUtil;
-import com.z.file.FileInfo;
-import com.z.file.UploadPretreatment;
+import com.z.file.entity.FileInfo;
+import com.z.file.entity.UploadPretreatment;
 import com.z.file.exception.FileStorageRuntimeException;
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;

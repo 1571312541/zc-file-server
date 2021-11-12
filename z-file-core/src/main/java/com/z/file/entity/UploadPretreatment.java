@@ -1,7 +1,8 @@
-package com.z.file;
+package com.z.file.entity;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.file.FileNameUtil;
+import com.z.file.FileService;
 import com.z.file.exception.FileStorageRuntimeException;
 import com.z.file.vo.ImgSize;
 import lombok.Getter;

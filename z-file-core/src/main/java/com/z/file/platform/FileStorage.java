@@ -1,7 +1,7 @@
 package com.z.file.platform;
 
-import com.z.file.FileInfo;
-import com.z.file.UploadPretreatment;
+import com.z.file.entity.FileInfo;
+import com.z.file.entity.UploadPretreatment;
 
 import java.io.InputStream;
 import java.util.function.Consumer;
