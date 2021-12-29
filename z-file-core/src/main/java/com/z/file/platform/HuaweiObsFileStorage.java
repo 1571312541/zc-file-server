@@ -4,11 +4,12 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import com.z.file.entity.FileInfo;
 import com.z.file.entity.UploadPretreatment;
-import com.z.file.exception.FileStorageRuntimeException;
+import com.z.file.exception.FileException;
 import com.obs.services.ObsClient;
 import com.obs.services.model.ObsObject;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -25,6 +26,8 @@ public class HuaweiObsFileStorage implements FileStorage {
 
     /* 存储平台 */
     private String client;
+    /* 存储平台类型 */
+    private String clientType;
     private String accessKey;
     private String secretKey;
     private String endPoint;
@@ -60,7 +63,7 @@ public class HuaweiObsFileStorage implements FileStorage {
             return true;
         } catch (IOException e) {
             obs.deleteObject(bucketName,newFileKey);
-            throw new FileStorageRuntimeException("文件上传失败！platform：" + client + "，filename：" + fileInfo.getOriginalFilename(),e);
+            throw new FileException("文件上传失败！platform：" + client + "，filename：" + fileInfo.getOriginalFilename(),e);
         } finally {
             close(obs);
         }
@@ -69,11 +72,15 @@ public class HuaweiObsFileStorage implements FileStorage {
     @Override
     public boolean delete(FileInfo fileInfo) {
         ObsClient obs = getObs();
+        String path = fileInfo.getPath();
+        if (StringUtils.isBlank(fileInfo.getPath())) {
+            path = "";
+        }
         try {
             if (fileInfo.getThFilename() != null) {   //删除缩略图
-                obs.deleteObject(bucketName,fileInfo.getBasePath() + fileInfo.getPath() + fileInfo.getThFilename());
+                obs.deleteObject(bucketName,fileInfo.getBasePath() + path + fileInfo.getThFilename());
             }
-            obs.deleteObject(bucketName,fileInfo.getBasePath() + fileInfo.getPath() + fileInfo.getFilename());
+            obs.deleteObject(bucketName,fileInfo.getBasePath() + path + fileInfo.getFilename());
             return true;
         } finally {
             close(obs);
@@ -99,7 +106,7 @@ public class HuaweiObsFileStorage implements FileStorage {
             try (InputStream in = object.getObjectContent()) {
                 consumer.accept(in);
             } catch (IOException e) {
-                throw new FileStorageRuntimeException("文件下载失败！platform：" + fileInfo,e);
+                throw new FileException("文件下载失败！platform：" + fileInfo,e);
             }
         } finally {
             close(obs);
@@ -109,7 +116,7 @@ public class HuaweiObsFileStorage implements FileStorage {
     @Override
     public void downloadTh(FileInfo fileInfo,Consumer<InputStream> consumer) {
         if (StrUtil.isBlank(fileInfo.getThFilename())) {
-            throw new FileStorageRuntimeException("缩略图文件下载失败，文件不存在！fileInfo：" + fileInfo);
+            throw new FileException("缩略图文件下载失败，文件不存在！fileInfo：" + fileInfo);
         }
         ObsClient obs = getObs();
         try {
@@ -117,7 +124,7 @@ public class HuaweiObsFileStorage implements FileStorage {
             try (InputStream in = object.getObjectContent()) {
                 consumer.accept(in);
             } catch (IOException e) {
-                throw new FileStorageRuntimeException("缩略图文件下载失败！fileInfo：" + fileInfo,e);
+                throw new FileException("缩略图文件下载失败！fileInfo：" + fileInfo,e);
             }
         } finally {
             close(obs);

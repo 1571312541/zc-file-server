@@ -4,7 +4,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.z.file.entity.FileInfo;
 import com.z.file.entity.UploadPretreatment;
-import com.z.file.exception.FileStorageRuntimeException;
+import com.z.file.exception.FileException;
 import io.minio.ErrorCode;
 import io.minio.MinioClient;
 import io.minio.ObjectStat;
@@ -12,6 +12,7 @@ import io.minio.PutObjectOptions;
 import io.minio.errors.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -30,6 +31,8 @@ public class MinIOFileStorage implements FileStorage {
 
     /* 存储平台 */
     private String client;
+    /* 存储平台类型 */
+    private String clientType;
     private String accessKey;
     private String secretKey;
     private String endPoint;
@@ -41,7 +44,7 @@ public class MinIOFileStorage implements FileStorage {
         try {
             return new MinioClient(endPoint,accessKey,secretKey);
         } catch (InvalidEndpointException | InvalidPortException e) {
-            throw new FileStorageRuntimeException("文件上传失败！platform：" + client,e);
+            throw new FileException("文件上传失败！platform：" + client,e);
         }
     }
 
@@ -76,21 +79,25 @@ public class MinIOFileStorage implements FileStorage {
                 client.removeObject(bucketName,newFileKey);
             } catch (Exception ignored) {
             }
-            throw new FileStorageRuntimeException("文件上传失败！platform：" + client + "，filename：" + fileInfo.getOriginalFilename(),e);
+            throw new FileException("文件上传失败！platform：" + client + "，filename：" + fileInfo.getOriginalFilename(),e);
         }
     }
 
     @Override
     public boolean delete(FileInfo fileInfo) {
         MinioClient client = getMiClient();
+        String path = fileInfo.getPath();
+        if (StringUtils.isBlank(fileInfo.getPath())) {
+            path = "";
+        }
         try {
             if (fileInfo.getThFilename() != null) {   //删除缩略图
-                client.removeObject(bucketName,fileInfo.getBasePath() + fileInfo.getPath() + fileInfo.getThFilename());
+                client.removeObject(bucketName,fileInfo.getBasePath() + path + fileInfo.getThFilename());
             }
-            client.removeObject(bucketName,fileInfo.getBasePath() + fileInfo.getPath() + fileInfo.getFilename());
+            client.removeObject(bucketName,fileInfo.getBasePath() + path + fileInfo.getFilename());
             return true;
         } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidBucketNameException | InvalidKeyException | InvalidResponseException | IOException | NoSuchAlgorithmException | XmlParserException e) {
-            throw new FileStorageRuntimeException("文件删除失败！fileInfo：" + fileInfo,e);
+            throw new FileException("文件删除失败！fileInfo：" + fileInfo,e);
         }
     }
 
@@ -106,9 +113,9 @@ public class MinIOFileStorage implements FileStorage {
             if (ErrorCode.RESOURCE_NOT_FOUND.code().equals(code) || ErrorCode.NO_SUCH_OBJECT.code().equals(code)) {
                 return false;
             }
-            throw new FileStorageRuntimeException("查询文件是否存在失败！",e);
+            throw new FileException("查询文件是否存在失败！",e);
         } catch (InsufficientDataException | InternalException | InvalidBucketNameException | InvalidKeyException | InvalidResponseException | IOException | NoSuchAlgorithmException | XmlParserException e) {
-            throw new FileStorageRuntimeException("查询文件是否存在失败！",e);
+            throw new FileException("查询文件是否存在失败！",e);
         }
     }
 
@@ -118,20 +125,20 @@ public class MinIOFileStorage implements FileStorage {
         try (InputStream in = client.getObject(bucketName,fileInfo.getBasePath() + fileInfo.getPath() + fileInfo.getFilename())) {
             consumer.accept(in);
         } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidBucketNameException | InvalidKeyException | InvalidResponseException | IOException | NoSuchAlgorithmException | XmlParserException e) {
-            throw new FileStorageRuntimeException("文件下载失败！platform：" + fileInfo,e);
+            throw new FileException("文件下载失败！platform：" + fileInfo,e);
         }
     }
 
     @Override
     public void downloadTh(FileInfo fileInfo,Consumer<InputStream> consumer) {
         if (StrUtil.isBlank(fileInfo.getThFilename())) {
-            throw new FileStorageRuntimeException("缩略图文件下载失败，文件不存在！fileInfo：" + fileInfo);
+            throw new FileException("缩略图文件下载失败，文件不存在！fileInfo：" + fileInfo);
         }
         MinioClient client = getMiClient();
         try (InputStream in = client.getObject(bucketName,fileInfo.getBasePath() + fileInfo.getPath() + fileInfo.getThFilename())) {
             consumer.accept(in);
         } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidBucketNameException | InvalidKeyException | InvalidResponseException | IOException | NoSuchAlgorithmException | XmlParserException e) {
-            throw new FileStorageRuntimeException("缩略图文件下载失败！fileInfo：" + fileInfo,e);
+            throw new FileException("缩略图文件下载失败！fileInfo：" + fileInfo,e);
         }
 
     }

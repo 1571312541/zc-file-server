@@ -3,7 +3,7 @@ package com.z.file.platform;
 import cn.hutool.core.util.StrUtil;
 import com.z.file.entity.FileInfo;
 import com.z.file.entity.UploadPretreatment;
-import com.z.file.exception.FileStorageRuntimeException;
+import com.z.file.exception.FileException;
 import com.baidubce.Protocol;
 import com.baidubce.auth.DefaultBceCredentials;
 import com.baidubce.services.bos.BosClient;
@@ -11,6 +11,7 @@ import com.baidubce.services.bos.BosClientConfiguration;
 import com.baidubce.services.bos.model.BosObject;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -27,6 +28,8 @@ public class BaiduBosFileStorage implements FileStorage {
 
     /* 存储平台 */
     private String client;
+    /* 存储平台类型 */
+    private String clientType;
     private String accessKey;
     private String secretKey;
     private String endPoint;
@@ -69,7 +72,7 @@ public class BaiduBosFileStorage implements FileStorage {
             return true;
         } catch (IOException e) {
             bos.deleteObject(bucketName,newFileKey);
-            throw new FileStorageRuntimeException("文件上传失败！platform：" + client + "，filename：" + fileInfo.getOriginalFilename(),e);
+            throw new FileException("文件上传失败！platform：" + client + "，filename：" + fileInfo.getOriginalFilename(),e);
         } finally {
             shutdown(bos);
         }
@@ -78,11 +81,15 @@ public class BaiduBosFileStorage implements FileStorage {
     @Override
     public boolean delete(FileInfo fileInfo) {
         BosClient oss = getBos();
+        String path = fileInfo.getPath();
+        if (StringUtils.isBlank(fileInfo.getPath())) {
+            path = "";
+        }
         try {
             if (fileInfo.getThFilename() != null) {   //删除缩略图
-                oss.deleteObject(bucketName,fileInfo.getBasePath() + fileInfo.getPath() + fileInfo.getThFilename());
+                oss.deleteObject(bucketName,fileInfo.getBasePath() + path + fileInfo.getThFilename());
             }
-            oss.deleteObject(bucketName,fileInfo.getBasePath() + fileInfo.getPath() + fileInfo.getFilename());
+            oss.deleteObject(bucketName,fileInfo.getBasePath() + path + fileInfo.getFilename());
             return true;
         } finally {
             shutdown(oss);
@@ -108,7 +115,7 @@ public class BaiduBosFileStorage implements FileStorage {
             try (InputStream in = object.getObjectContent()) {
                 consumer.accept(in);
             } catch (IOException e) {
-                throw new FileStorageRuntimeException("文件下载失败！platform：" + fileInfo,e);
+                throw new FileException("文件下载失败！platform：" + fileInfo,e);
             }
         } finally {
             shutdown(bos);
@@ -118,7 +125,7 @@ public class BaiduBosFileStorage implements FileStorage {
     @Override
     public void downloadTh(FileInfo fileInfo,Consumer<InputStream> consumer) {
         if (StrUtil.isBlank(fileInfo.getThFilename())) {
-            throw new FileStorageRuntimeException("缩略图文件下载失败，文件不存在！fileInfo：" + fileInfo);
+            throw new FileException("缩略图文件下载失败，文件不存在！fileInfo：" + fileInfo);
         }
         BosClient bos = getBos();
         try {
@@ -126,7 +133,7 @@ public class BaiduBosFileStorage implements FileStorage {
             try (InputStream in = object.getObjectContent()) {
                 consumer.accept(in);
             } catch (IOException e) {
-                throw new FileStorageRuntimeException("缩略图文件下载失败！fileInfo：" + fileInfo,e);
+                throw new FileException("缩略图文件下载失败！fileInfo：" + fileInfo,e);
             }
         } finally {
             shutdown(bos);

@@ -4,7 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import com.z.file.entity.FileInfo;
 import com.z.file.entity.UploadPretreatment;
-import com.z.file.exception.FileStorageRuntimeException;
+import com.z.file.exception.FileException;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +26,8 @@ public class LocalFileStorage implements FileStorage {
     private String basePath;
     /* 存储平台 */
     private String client;
+    /* 存储平台类型 */
+    private String clientType;
     /* 访问域名 */
     private String domain;
 
@@ -52,18 +54,18 @@ public class LocalFileStorage implements FileStorage {
             return true;
         } catch (IOException e) {
             FileUtil.del(newFile);
-            throw new FileStorageRuntimeException("文件上传失败！platform：" + client + "，filename：" + fileInfo.getOriginalFilename(),e);
+            throw new FileException("文件上传失败！platform：" + client + "，filename：" + fileInfo.getOriginalFilename(),e);
         }
     }
 
     @Override
     public boolean delete(FileInfo fileInfo) {
         String path = fileInfo.getPath();
+        if (StringUtils.isBlank(fileInfo.getPath())) {
+            path = "";
+        }
         //删除缩略图
         if (fileInfo.getThFilename() != null) {
-            if (StringUtils.isBlank(fileInfo.getPath())) {
-                path = "";
-            }
             FileUtil.del(new File(fileInfo.getBasePath() + path,fileInfo.getThFilename()));
         }
         // 删除
@@ -81,19 +83,19 @@ public class LocalFileStorage implements FileStorage {
         try (InputStream in = FileUtil.getInputStream(fileInfo.getBasePath() + fileInfo.getPath() + fileInfo.getFilename())) {
             consumer.accept(in);
         } catch (IOException e) {
-            throw new FileStorageRuntimeException("文件下载失败！platform：" + fileInfo,e);
+            throw new FileException("文件下载失败！platform：" + fileInfo,e);
         }
     }
 
     @Override
     public void downloadTh(FileInfo fileInfo,Consumer<InputStream> consumer) {
         if (StrUtil.isBlank(fileInfo.getThFilename())) {
-            throw new FileStorageRuntimeException("缩略图文件下载失败，文件不存在！fileInfo：" + fileInfo);
+            throw new FileException("缩略图文件下载失败，文件不存在！fileInfo：" + fileInfo);
         }
         try (InputStream in = FileUtil.getInputStream(fileInfo.getBasePath() + fileInfo.getPath() + fileInfo.getThFilename())) {
             consumer.accept(in);
         } catch (IOException e) {
-            throw new FileStorageRuntimeException("缩略图文件下载失败！fileInfo：" + fileInfo,e);
+            throw new FileException("缩略图文件下载失败！fileInfo：" + fileInfo,e);
         }
     }
 }

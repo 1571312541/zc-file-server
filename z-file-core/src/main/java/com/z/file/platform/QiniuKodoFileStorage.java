@@ -1,17 +1,18 @@
 package com.z.file.platform;
 
 import cn.hutool.core.util.StrUtil;
-import com.z.file.entity.FileInfo;
-import com.z.file.entity.UploadPretreatment;
-import com.z.file.exception.FileStorageRuntimeException;
 import com.qiniu.common.QiniuException;
 import com.qiniu.storage.BucketManager;
 import com.qiniu.storage.Configuration;
 import com.qiniu.storage.Region;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.util.Auth;
+import com.z.file.entity.FileInfo;
+import com.z.file.entity.UploadPretreatment;
+import com.z.file.exception.FileException;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -29,6 +30,8 @@ public class QiniuKodoFileStorage implements FileStorage {
 
     /* 存储平台 */
     private String client;
+    /* 存储平台类型 */
+    private String clientType;
     private String accessKey;
     private String secretKey;
     private String bucketName;
@@ -76,20 +79,24 @@ public class QiniuKodoFileStorage implements FileStorage {
                 getBucketManager().delete(bucketName,newFileKey);
             } catch (QiniuException ignored) {
             }
-            throw new FileStorageRuntimeException("文件上传失败！platform：" + client + "，filename：" + fileInfo.getOriginalFilename(),e);
+            throw new FileException("文件上传失败！platform：" + client + "，filename：" + fileInfo.getOriginalFilename(),e);
         }
     }
 
     @Override
     public boolean delete(FileInfo fileInfo) {
         BucketManager manager = getBucketManager();
+        String path = fileInfo.getPath();
+        if (StringUtils.isBlank(fileInfo.getPath())) {
+            path = "";
+        }
         try {
             if (fileInfo.getThFilename() != null) {   //删除缩略图
-                manager.delete(bucketName,fileInfo.getBasePath() + fileInfo.getPath() + fileInfo.getThFilename());
+                manager.delete(bucketName,fileInfo.getBasePath() + path + fileInfo.getThFilename());
             }
-            manager.delete(bucketName,fileInfo.getBasePath() + fileInfo.getPath() + fileInfo.getFilename());
+            manager.delete(bucketName,fileInfo.getBasePath() + path + fileInfo.getFilename());
         } catch (QiniuException e) {
-            throw new FileStorageRuntimeException("删除文件失败！" + e.code() + "，" + e.response.toString(),e);
+            throw new FileException("删除文件失败！" + e.code() + "，" + e.response.toString(),e);
         }
         return true;
     }
@@ -102,7 +109,7 @@ public class QiniuKodoFileStorage implements FileStorage {
             com.qiniu.storage.model.FileInfo stat = manager.stat(bucketName,fileInfo.getBasePath() + fileInfo.getPath() + fileInfo.getFilename());
             if (stat != null && stat.md5 != null) return true;
         } catch (QiniuException e) {
-            throw new FileStorageRuntimeException("查询文件是否存在失败！" + e.code() + "，" + e.response.toString(),e);
+            throw new FileException("查询文件是否存在失败！" + e.code() + "，" + e.response.toString(),e);
         }
         return false;
     }
@@ -113,20 +120,20 @@ public class QiniuKodoFileStorage implements FileStorage {
         try (InputStream in = new URL(url).openStream()) {
             consumer.accept(in);
         } catch (IOException e) {
-            throw new FileStorageRuntimeException("文件下载失败！platform：" + fileInfo,e);
+            throw new FileException("文件下载失败！platform：" + fileInfo,e);
         }
     }
 
     @Override
     public void downloadTh(FileInfo fileInfo,Consumer<InputStream> consumer) {
         if (StrUtil.isBlank(fileInfo.getThUrl())) {
-            throw new FileStorageRuntimeException("缩略图文件下载失败，文件不存在！fileInfo：" + fileInfo);
+            throw new FileException("缩略图文件下载失败，文件不存在！fileInfo：" + fileInfo);
         }
         String url = getAuth().privateDownloadUrl(fileInfo.getThUrl());
         try (InputStream in = new URL(url).openStream()) {
             consumer.accept(in);
         } catch (IOException e) {
-            throw new FileStorageRuntimeException("缩略图文件下载失败！fileInfo：" + fileInfo,e);
+            throw new FileException("缩略图文件下载失败！fileInfo：" + fileInfo,e);
         }
     }
 }

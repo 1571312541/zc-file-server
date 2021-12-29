@@ -13,7 +13,7 @@ import com.z.file.entity.FileInfo;
 import com.z.file.entity.MockMultipartFile;
 import com.z.file.entity.MultipartFileWrapper;
 import com.z.file.entity.UploadPretreatment;
-import com.z.file.exception.FileStorageRuntimeException;
+import com.z.file.exception.FileException;
 import com.z.file.listener.Downloader;
 import com.z.file.platform.FileStorage;
 import com.z.file.recorder.FileRecorder;
@@ -68,7 +68,7 @@ public class FileService {
     public FileStorage getFileStorageVerify(FileInfo fileInfo) {
         FileStorage fileStorage = getFileStorage(fileInfo.getClient());
         if (fileStorage == null) {
-            throw new FileStorageRuntimeException("没有找到对应的存储平台！");
+            throw new FileException("没有找到对应的存储平台！");
         }
         return fileStorage;
     }
@@ -79,10 +79,10 @@ public class FileService {
     public FileInfo upload(UploadPretreatment pre) {
         MultipartFile file = pre.getFileWrapper();
         if (file == null) {
-            throw new FileStorageRuntimeException("文件不允许为 null ！");
+            throw new FileException("文件不允许为 null ！");
         }
         if (pre.getPlatform() == null) {
-            throw new FileStorageRuntimeException("platform 不允许为 null ！");
+            throw new FileException("platform 不允许为 null ！");
         }
 
         FileInfo fileInfo = new FileInfo();
@@ -94,6 +94,7 @@ public class FileService {
         fileInfo.setObjectId(pre.getObjectId());
         fileInfo.setObjectType(pre.getObjectType());
         fileInfo.setRemark(pre.getRemark());
+        fileInfo.setFileType(FileUtil.getFileType(FileNameUtil.getSuffix(file.getOriginalFilename())));
         fileInfo.setPath(pre.getPath());
         fileInfo.setClient(pre.getPlatform());
         if (StrUtil.isNotBlank(pre.getSaveFilename())) {
@@ -113,9 +114,14 @@ public class FileService {
         }
 
         FileStorage fileStorage = getFileStorage(pre.getPlatform());
-        if (fileStorage == null){ throw new FileStorageRuntimeException("没有找到对应的存储平台！"+pre.getPlatform());}
-
-
+        if (fileStorage == null){ throw new FileException("没有找到对应的存储平台！"+pre.getPlatform());}
+        fileInfo.setClientType(fileStorage.getClientType());
+        // 扩展字段
+        fileInfo.setExtenda(pre.getExtenda());
+        fileInfo.setExtendb(pre.getExtendb());
+        fileInfo.setExtendc(pre.getExtendc());
+        fileInfo.setExtendd(pre.getExtendd());
+        fileInfo.setExtende(pre.getExtende());
         //处理切面
         return new UploadAspectChain(aspectList,(_fileInfo,_pre,_fileStorage,_fileRecorder) -> {
             //真正开始保存
@@ -168,7 +174,7 @@ public class FileService {
         }
         FileStorage fileStorage = getFileStorage(fileInfo.getClient());
         if (fileStorage == null) {
-            throw new FileStorageRuntimeException("没有找到对应的存储平台！");
+            throw new FileException("没有找到对应的存储平台！");
         }
 
         return new DeleteAspectChain(aspectList,(_fileInfo,_fileStorage,_fileRecorder) -> {
@@ -266,7 +272,7 @@ public class FileService {
             pre.setFileWrapper(new MultipartFileWrapper(new MockMultipartFile("",in)));
             return pre;
         } catch (Exception e) {
-            throw new FileStorageRuntimeException("根据 InputStream 创建上传预处理器失败！",e);
+            throw new FileException("根据 InputStream 创建上传预处理器失败！",e);
         }
     }
 
@@ -279,7 +285,7 @@ public class FileService {
             pre.setFileWrapper(new MultipartFileWrapper(new MockMultipartFile(file.getName(),file.getName(),null,new FileInputStream(file))));
             return pre;
         } catch (Exception e) {
-            throw new FileStorageRuntimeException("根据 File 创建上传预处理器失败！",e);
+            throw new FileException("根据 File 创建上传预处理器失败！",e);
         }
     }
 
@@ -292,7 +298,7 @@ public class FileService {
             pre.setFileWrapper(new MultipartFileWrapper(new MockMultipartFile("",url.openStream())));
             return pre;
         } catch (Exception e) {
-            throw new FileStorageRuntimeException("根据 URL 创建上传预处理器失败！",e);
+            throw new FileException("根据 URL 创建上传预处理器失败！",e);
         }
     }
 
@@ -303,7 +309,7 @@ public class FileService {
         try {
             return build(uri.toURL());
         } catch (Exception e) {
-            throw new FileStorageRuntimeException("根据 URI 创建上传预处理器失败！",e);
+            throw new FileException("根据 URI 创建上传预处理器失败！",e);
         }
     }
 
@@ -314,7 +320,7 @@ public class FileService {
         try {
             return build(URLUtil.url(url));
         } catch (Exception e) {
-            throw new FileStorageRuntimeException("根据 url：" + url + " 创建上传预处理器失败！",e);
+            throw new FileException("根据 url：" + url + " 创建上传预处理器失败！",e);
         }
     }
 

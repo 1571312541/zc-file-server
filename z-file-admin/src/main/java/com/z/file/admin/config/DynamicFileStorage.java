@@ -55,7 +55,20 @@ public class DynamicFileStorage {
                         log.info("动态加载文件源  {}--{}",config.getClientType(),config.getClientName());
                         LocalFileStorage localApiClient = new LocalFileStorage();
                         localApiClient.setClient(config.getClientName());
-                        localApiClient.setBasePath(config.getBasePath());
+                        switch (ZcFileCons.getPath()) {
+                            case ZcFileCons.SystemType.WIN:
+                                localApiClient.setBasePath(config.getBasePath());
+                                break;
+                            case ZcFileCons.SystemType.MAC:
+                                localApiClient.setBasePath(config.getMacBasePath());
+                                break;
+                            case ZcFileCons.SystemType.LINUX:
+                                localApiClient.setBasePath(config.getLinuxBasePath());
+                                break;
+                            default:
+                                localApiClient.setBasePath(config.getBasePath());
+                                break;
+                        }
                         localApiClient.setDomain(config.getDomain());
                         list.add(localApiClient);
                         break;

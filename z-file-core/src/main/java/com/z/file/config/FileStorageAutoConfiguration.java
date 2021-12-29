@@ -63,6 +63,7 @@ public class FileStorageAutoConfiguration implements WebMvcConfigurer {
             log.info("加载存储平台：{}",local.getPlatform());
             LocalFileStorage localFileStorage = new LocalFileStorage();
             localFileStorage.setClient(local.getPlatform());
+            localFileStorage.setClientType("local");
             localFileStorage.setBasePath(local.getBasePath());
             localFileStorage.setDomain(local.getDomain());
             return localFileStorage;
@@ -82,6 +83,7 @@ public class FileStorageAutoConfiguration implements WebMvcConfigurer {
             log.info("加载存储平台：{}",obs.getPlatform());
             HuaweiObsFileStorage storage = new HuaweiObsFileStorage();
             storage.setClient(obs.getPlatform());
+            storage.setClientType("huawei-obs");
             storage.setAccessKey(obs.getAccessKey());
             storage.setSecretKey(obs.getSecretKey());
             storage.setEndPoint(obs.getEndPoint());
@@ -105,6 +107,7 @@ public class FileStorageAutoConfiguration implements WebMvcConfigurer {
             log.info("加载存储平台：{}",oss.getPlatform());
             AliyunOssFileStorage storage = new AliyunOssFileStorage();
             storage.setClient(oss.getPlatform());
+            storage.setClientType("aliyun-oss");
             storage.setAccessKey(oss.getAccessKey());
             storage.setSecretKey(oss.getSecretKey());
             storage.setEndPoint(oss.getEndPoint());
@@ -128,6 +131,7 @@ public class FileStorageAutoConfiguration implements WebMvcConfigurer {
             log.info("加载存储平台：{}",kodo.getPlatform());
             QiniuKodoFileStorage storage = new QiniuKodoFileStorage();
             storage.setClient(kodo.getPlatform());
+            storage.setClientType("qiniu-kodo");
             storage.setAccessKey(kodo.getAccessKey());
             storage.setSecretKey(kodo.getSecretKey());
             storage.setBucketName(kodo.getBucketName());
@@ -150,6 +154,7 @@ public class FileStorageAutoConfiguration implements WebMvcConfigurer {
             log.info("加载存储平台：{}",cos.getPlatform());
             TencentCosFileStorage storage = new TencentCosFileStorage();
             storage.setClient(cos.getPlatform());
+            storage.setClientType("tencent-cos");
             storage.setSecretId(cos.getSecretId());
             storage.setSecretKey(cos.getSecretKey());
             storage.setRegion(cos.getRegion());
@@ -173,6 +178,7 @@ public class FileStorageAutoConfiguration implements WebMvcConfigurer {
             log.info("加载存储平台：{}",bos.getPlatform());
             BaiduBosFileStorage storage = new BaiduBosFileStorage();
             storage.setClient(bos.getPlatform());
+            storage.setClientType("baidu-bos");
             storage.setAccessKey(bos.getAccessKey());
             storage.setSecretKey(bos.getSecretKey());
             storage.setEndPoint(bos.getEndPoint());
@@ -196,6 +202,7 @@ public class FileStorageAutoConfiguration implements WebMvcConfigurer {
             log.info("加载存储平台：{}",uss.getPlatform());
             UpyunUssFileStorage storage = new UpyunUssFileStorage();
             storage.setClient(uss.getPlatform());
+            storage.setClientType("upyun-uss");
             storage.setUsername(uss.getUsername());
             storage.setPassword(uss.getPassword());
             storage.setBucketName(uss.getBucketName());
@@ -218,6 +225,7 @@ public class FileStorageAutoConfiguration implements WebMvcConfigurer {
             log.info("加载存储平台：{}",minio.getPlatform());
             MinIOFileStorage storage = new MinIOFileStorage();
             storage.setClient(minio.getPlatform());
+            storage.setClientType("minio");
             storage.setAccessKey(minio.getAccessKey());
             storage.setSecretKey(minio.getSecretKey());
             storage.setEndPoint(minio.getEndPoint());
@@ -241,6 +249,7 @@ public class FileStorageAutoConfiguration implements WebMvcConfigurer {
             log.info("加载存储平台：{}",s3.getPlatform());
             AwsS3FileStorage storage = new AwsS3FileStorage();
             storage.setClient(s3.getPlatform());
+            storage.setClientType("aws-s3");
             storage.setAccessKey(s3.getAccessKey());
             storage.setSecretKey(s3.getSecretKey());
             storage.setRegion(s3.getRegion());

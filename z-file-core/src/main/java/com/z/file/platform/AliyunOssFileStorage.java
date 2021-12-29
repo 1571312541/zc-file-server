@@ -3,12 +3,13 @@ package com.z.file.platform;
 import cn.hutool.core.util.StrUtil;
 import com.z.file.entity.FileInfo;
 import com.z.file.entity.UploadPretreatment;
-import com.z.file.exception.FileStorageRuntimeException;
+import com.z.file.exception.FileException;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.model.OSSObject;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -25,6 +26,8 @@ public class AliyunOssFileStorage implements FileStorage {
 
     /* 存储平台 */
     private String client;
+    /* 存储平台类型 */
+    private String clientType;
     private String accessKey;
     private String secretKey;
     private String endPoint;
@@ -63,7 +66,7 @@ public class AliyunOssFileStorage implements FileStorage {
             return true;
         } catch (IOException e) {
             oss.deleteObject(bucketName,newFileKey);
-            throw new FileStorageRuntimeException("文件上传失败！platform：" + client + "，filename：" + fileInfo.getOriginalFilename(),e);
+            throw new FileException("文件上传失败！platform：" + client + "，filename：" + fileInfo.getOriginalFilename(),e);
         } finally {
             shutdown(oss);
         }
@@ -72,11 +75,15 @@ public class AliyunOssFileStorage implements FileStorage {
     @Override
     public boolean delete(FileInfo fileInfo) {
         OSS oss = getOss();
+        String path = fileInfo.getPath();
+        if (StringUtils.isBlank(fileInfo.getPath())) {
+            path = "";
+        }
         try {
             if (fileInfo.getThFilename() != null) {   //删除缩略图
-                oss.deleteObject(bucketName,fileInfo.getBasePath() + fileInfo.getPath() + fileInfo.getThFilename());
+                oss.deleteObject(bucketName,fileInfo.getBasePath() + path + fileInfo.getThFilename());
             }
-            oss.deleteObject(bucketName,fileInfo.getBasePath() + fileInfo.getPath() + fileInfo.getFilename());
+            oss.deleteObject(bucketName,fileInfo.getBasePath() + path + fileInfo.getFilename());
             return true;
         } finally {
             shutdown(oss);
@@ -102,7 +109,7 @@ public class AliyunOssFileStorage implements FileStorage {
             try (InputStream in = object.getObjectContent()) {
                 consumer.accept(in);
             } catch (IOException e) {
-                throw new FileStorageRuntimeException("文件下载失败！platform：" + fileInfo,e);
+                throw new FileException("文件下载失败！platform：" + fileInfo,e);
             }
         } finally {
             shutdown(oss);
@@ -112,7 +119,7 @@ public class AliyunOssFileStorage implements FileStorage {
     @Override
     public void downloadTh(FileInfo fileInfo,Consumer<InputStream> consumer) {
         if (StrUtil.isBlank(fileInfo.getThFilename())) {
-            throw new FileStorageRuntimeException("缩略图文件下载失败，文件不存在！fileInfo：" + fileInfo);
+            throw new FileException("缩略图文件下载失败，文件不存在！fileInfo：" + fileInfo);
         }
         OSS oss = getOss();
         try {
@@ -120,7 +127,7 @@ public class AliyunOssFileStorage implements FileStorage {
             try (InputStream in = object.getObjectContent()) {
                 consumer.accept(in);
             } catch (IOException e) {
-                throw new FileStorageRuntimeException("缩略图文件下载失败！fileInfo：" + fileInfo,e);
+                throw new FileException("缩略图文件下载失败！fileInfo：" + fileInfo,e);
             }
         } finally {
             shutdown(oss);

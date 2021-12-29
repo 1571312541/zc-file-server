@@ -3,7 +3,7 @@ package com.z.file.entity;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.file.FileNameUtil;
 import com.z.file.FileService;
-import com.z.file.exception.FileStorageRuntimeException;
+import com.z.file.exception.FileException;
 import com.z.file.vo.ImgSize;
 import lombok.Getter;
 import lombok.Setter;
@@ -71,6 +71,14 @@ public class UploadPretreatment {
      * 缩略图的保存文件名，注意此文件名不含后缀，后缀用 {@link UploadPretreatment#thumbnailSuffix} 属性控制
      */
     private String saveThFilename;
+    /**
+     * 扩展字段
+     */
+    private String extenda;
+    private String extendb;
+    private String extendc;
+    private String extendd;
+    private String extende;
 
     /**
      * 设置文件所属对象id
@@ -126,7 +134,7 @@ public class UploadPretreatment {
             fileWrapper.setMultipartFile(new MockMultipartFile(mf.getName(),mf.getOriginalFilename(),null,out.toByteArray()));
             return this;
         } catch (IOException e) {
-            throw new FileStorageRuntimeException("图片处理失败！",e);
+            throw new FileException("图片处理失败！",e);
         }
     }
 
@@ -161,7 +169,7 @@ public class UploadPretreatment {
         try {
             return thumbnail(consumer,thumbnailBytes != null ? new ByteArrayInputStream(thumbnailBytes) : fileWrapper.getInputStream());
         } catch (IOException e) {
-            throw new FileStorageRuntimeException("生成缩略图失败！",e);
+            throw new FileException("生成缩略图失败！",e);
         }
     }
 
@@ -173,7 +181,7 @@ public class UploadPretreatment {
         try {
             return thumbnail(consumer,file.getInputStream());
         } catch (IOException e) {
-            throw new FileStorageRuntimeException("生成缩略图失败！",e);
+            throw new FileException("生成缩略图失败！",e);
         }
     }
 
@@ -192,7 +200,7 @@ public class UploadPretreatment {
             thumbnailBytes = out.toByteArray();
             return this;
         } catch (IOException e) {
-            throw new FileStorageRuntimeException("生成缩略图失败！",e);
+            throw new FileException("生成缩略图失败！",e);
         } finally {
             IoUtil.close(in);
         }

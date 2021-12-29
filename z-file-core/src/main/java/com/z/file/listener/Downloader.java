@@ -6,7 +6,7 @@ import com.z.file.aspect.DownloadAspectChain;
 import com.z.file.aspect.DownloadThAspectChain;
 import com.z.file.aspect.FileStorageAspect;
 import com.z.file.entity.FileInfo;
-import com.z.file.exception.FileStorageRuntimeException;
+import com.z.file.exception.FileException;
 import com.z.file.platform.FileStorage;
 
 import java.io.File;
@@ -101,7 +101,7 @@ public class Downloader {
                     consumer.accept(progressListener == null ? in : new ProgressInputStream(in,progressListener,fileInfo.getThSize()))
             );
         } else {
-            throw new FileStorageRuntimeException("没找到对应的下载目标，请设置 target 参数！");
+            throw new FileException("没找到对应的下载目标，请设置 target 参数！");
         }
     }
 

@@ -15,6 +15,10 @@ public interface FileStorage {
      * 获取平台
      */
     String getClient();
+    /**
+     * 获取平台类型
+     */
+    String getClientType();
 
     /**
      * 设置平台

@@ -114,6 +114,15 @@ public class FileInfo implements Serializable {
      */
     private Date updateTime;
 
+    /**
+     * 扩展字段
+     */
+    private String extenda;
+    private String extendb;
+    private String extendc;
+    private String extendd;
+    private String extende;
+
     private static final long serialVersionUID = 1L;
     public long getUseTime() {
         Date uploadEndTime = this.getUploadEndTime();

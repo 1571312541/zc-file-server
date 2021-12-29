@@ -21,6 +21,20 @@ public class ZcFileCons {
          * mac 系统
          */
         public static final String MAC = "mac";
+
+        /**
+         * linux 系统
+         */
+        public static final String LINUX = "linux";
+    }
+    public static String getPath(){
+        String os = System.getProperty("os.name");
+        if(os.toLowerCase().startsWith(SystemType.WIN)) {
+            return SystemType.WIN;
+        } else if(os.toLowerCase().startsWith(SystemType.MAC)){
+            return SystemType.MAC;
+        }
+        return SystemType.LINUX;
     }
     public static class SourceType{
         public static final String SOURCE_TYPE_LOCAL = "local";
@@ -33,4 +47,5 @@ public class ZcFileCons {
         public static final String SOURCE_TYPE_TENGXUNYUN = "tengxunyun";
         public static final String SOURCE_TYPE_YOUPAIYUN = "youpaiyun";
     }
+
 }
